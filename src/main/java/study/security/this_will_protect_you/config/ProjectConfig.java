@@ -14,23 +14,14 @@ import javax.sql.DataSource;
 public class ProjectConfig {
 
     private final CustomAuthenticationProvider authenticationProvider;
-//    private final CustomInMemeryUserDetailsService userDetailsService;
-//    private final DataSource dataSource;
+    private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+    private final CustomAuthenticationFailureHandler authenticationFailureHandler;
 
-//    public ProjectConfig(CustomAuthenticationProvider authenticationProvider, CustomInMemeryUserDetailsService userDetailsService, DataSource dataSource) {
-//        this.authenticationProvider = authenticationProvider;
-//        this.userDetailsService = userDetailsService;
-//        this.dataSource = dataSource;
-//    }
-
-    public ProjectConfig(CustomAuthenticationProvider authenticationProvider) {
+    public ProjectConfig(CustomAuthenticationProvider authenticationProvider, CustomAuthenticationSuccessHandler authenticationSuccessHandler, CustomAuthenticationFailureHandler authenticationFailureHandler) {
         this.authenticationProvider = authenticationProvider;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
+        this.authenticationFailureHandler = authenticationFailureHandler;
     }
-
-
-//    public ProjectConfig(DataSource dataSource) {
-//        this.dataSource = dataSource;
-//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,17 +30,12 @@ public class ProjectConfig {
                         .requestMatchers("/save").permitAll().anyRequest().authenticated()
                 );
 
-        http.httpBasic(c -> {
-            c.realmName("OTHER");
-            c.authenticationEntryPoint(new CustomEntryPoint());
+        http.formLogin(c -> {
+            c.successHandler(authenticationSuccessHandler);
+            c.failureHandler(authenticationFailureHandler);
         });
-//                .userDetailsService(new JdbcUserDetailsManager(dataSource));
+
         http.authenticationProvider(authenticationProvider);
         return http.build();
     }
-
-//    @Bean // BeanCreationException
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) -> web.ignoring().anyRequest().requestMatchers("/save");
-//    }
 }

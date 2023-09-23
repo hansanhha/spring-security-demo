@@ -4,6 +4,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 import study.security.this_will_protect_you.config.SecurityUser;
 import study.security.this_will_protect_you.entity.Authorities;
 import study.security.this_will_protect_you.entity.User;
@@ -36,4 +37,10 @@ public class HelloController {
 //        userRepository.save(new User("testUser", "1234", 1));
         return "created data";
     }
+
+    @GetMapping("/home")
+    public ModelAndView home() {
+        return new ModelAndView("home.html");
+    }
+
 }
