@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 @Configuration
 public class ProjectConfig {
 
-//    private final CustomAuthenticationProvider authenticationProvider;
+    private final CustomAuthenticationProvider authenticationProvider;
 //    private final CustomInMemeryUserDetailsService userDetailsService;
 //    private final DataSource dataSource;
 
@@ -22,6 +22,10 @@ public class ProjectConfig {
 //        this.userDetailsService = userDetailsService;
 //        this.dataSource = dataSource;
 //    }
+
+    public ProjectConfig(CustomAuthenticationProvider authenticationProvider) {
+        this.authenticationProvider = authenticationProvider;
+    }
 
 
 //    public ProjectConfig(DataSource dataSource) {
@@ -32,10 +36,15 @@ public class ProjectConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests((authz) -> authz
-                        .requestMatchers("/hello").authenticated()
-                ).httpBasic(Customizer.withDefaults());
+                        .requestMatchers("/save").permitAll().anyRequest().authenticated()
+                );
+
+        http.httpBasic(c -> {
+            c.realmName("OTHER");
+            c.authenticationEntryPoint(new CustomEntryPoint());
+        });
 //                .userDetailsService(new JdbcUserDetailsManager(dataSource));
-//                .authenticationProvider(authenticationProvider);
+        http.authenticationProvider(authenticationProvider);
         return http.build();
     }
 

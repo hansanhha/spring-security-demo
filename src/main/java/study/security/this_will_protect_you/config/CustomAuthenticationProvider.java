@@ -2,11 +2,13 @@ package study.security.this_will_protect_you.config;
 
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -27,22 +29,23 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String name = authentication.getName();
-        String credentials = (String) authentication.getCredentials();
+        String password = (String) authentication.getCredentials();
 
         UserDetails user = userDetailsService.loadUserByUsername(name);
-        String encodedPassword = passwordEncoder.encode(credentials);
-        boolean matches = passwordEncoder.matches(user.getPassword(), encodedPassword);
+        System.out.println(password);
+        System.out.println(user.getPassword());
+        boolean matches = passwordEncoder.matches(password, user.getPassword());
 
         if (matches) {
-            return new UsernamePasswordAuthenticationToken(name, credentials, user.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(name, password, user.getAuthorities());
         } else {
-            throw new AuthenticationCredentialsNotFoundException("Error in authentication!");
+            throw new BadCredentialsException("Error in authentication!");
         }
 
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
+        return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 }
