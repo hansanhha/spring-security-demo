@@ -8,26 +8,31 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class UserManagementConfig {
 
+    private DataSource dataSource;
+
+    public UserManagementConfig(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     @Bean
     public UserDetailsService userDetailsService() {
-        var userDetailsService = new InMemoryUserDetailsManager();
-
-        UserDetails user = User.withUsername("testUser") // 사용자 생성 - 이름, 암호, 권한 목록
-                .password("1234")
-                .authorities("read")
-                .build();
-
-        userDetailsService.createUser(user); // userDetailsService에서 관리하도록 사용자 추가
-
-        return userDetailsService;
+        String userByUsernameQuery = "select username, password, enabled from users where username = ?";
+        String authsByUserQuery = "select username, authority from authorities where username = ?";
+        var userDetailsManager = new JdbcUserDetailsManager(dataSource);
+        userDetailsManager.setUsersByUsernameQuery(userByUsernameQuery);
+        userDetailsManager.setAuthoritiesByUsernameQuery(authsByUserQuery);
+        return userDetailsManager;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new PlainTextPasswordEncoder();
     }
 }

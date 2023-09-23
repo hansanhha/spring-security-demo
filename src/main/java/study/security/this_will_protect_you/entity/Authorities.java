@@ -7,10 +7,30 @@ import jakarta.persistence.Id;
 @Entity
 public class Authorities {
 
+    protected Authorities() {
+    }
+
+    public Authorities(String username, String authority) {
+        this.username = username;
+        this.authority = authority;
+    }
+
     @Id @GeneratedValue
     private int id;
 
-    private String name;
+    private String username;
 
     private String authority;
+
+    public int getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getAuthority() {
+        return authority;
+    }
 }

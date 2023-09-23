@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+//@Component
 public class CustomInMemeryUserDetailsService implements UserDetailsService {
 
     private final List<UserDetails> users;
