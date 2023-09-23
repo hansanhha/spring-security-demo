@@ -1,0 +1,23 @@
+spring:
+  security:
+    user:
+      name: user
+      password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+        hibernate:
+          format_sql: true
+          show_sql: true
+
+logging:
+  level:
+    org.hibernate.sql: debug
+
+server:
+  ssl:
+    key-store-type: ${KEY_STORE_TYPE}
+    key-store: ${KEY_STORE}
+    key-store-password: ${KEY_STORE_PASSWORD}
