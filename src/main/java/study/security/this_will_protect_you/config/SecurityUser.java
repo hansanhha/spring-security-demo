@@ -1,11 +1,12 @@
 package study.security.this_will_protect_you.config;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import study.security.this_will_protect_you.entity.User;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Collectors;
 
 public class SecurityUser implements UserDetails {
 
@@ -17,8 +18,9 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> user.getAuthority());
-//        return null;
+        return user.getAuthorities().stream()
+                .map(a -> new SimpleGrantedAuthority(a.getName()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -49,5 +51,9 @@ public class SecurityUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public final User getUser() {
+        return user;
     }
 }
