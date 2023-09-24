@@ -20,38 +20,38 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import javax.sql.DataSource;
 import java.util.HashMap;
 
-@Configuration
-public class UserManagementConfig {
-
-    private DataSource dataSource;
-
-    public UserManagementConfig(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        String userByUsernameQuery = "select username, password, enabled from users where username = ?";
-        String authsByUserQuery = "select username, authority from authorities where username = ?";
-        String createUserQuery = "insert into users values (?, ?, ?, ?)";
-        var userDetailsManager = new JdbcUserDetailsManager(dataSource);
-        userDetailsManager.setUsersByUsernameQuery(userByUsernameQuery);
-        userDetailsManager.setAuthoritiesByUsernameQuery(authsByUserQuery);
-        userDetailsManager.setCreateUserSql(createUserQuery);
-        return userDetailsManager;
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-//        HashMap<String, PasswordEncoder> encoders = new HashMap<>();
+//@Configuration
+//public class UserManagementConfig {
 //
-//        encoders.put("noop", NoOpPasswordEncoder.getInstance());
-//        encoders.put("bcrypt", new BCryptPasswordEncoder());
-//        encoders.put("scrypt", new SCryptPasswordEncoder(1000, 4, 1, 32, 64));
+//    private DataSource dataSource;
 //
-//        return new DelegatingPasswordEncoder("bcrypt", encoders);
-        DelegatingPasswordEncoder passwordEncoder = (DelegatingPasswordEncoder) PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        passwordEncoder.setDefaultPasswordEncoderForMatches(new BCryptPasswordEncoder());
-        return passwordEncoder;
-    }
-}
+//    public UserManagementConfig(DataSource dataSource) {
+//        this.dataSource = dataSource;
+//    }
+//
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        String userByUsernameQuery = "select username, password, enabled from users where username = ?";
+//        String authsByUserQuery = "select username, authority from authorities where username = ?";
+//        String createUserQuery = "insert into users values (?, ?, ?, ?)";
+//        var userDetailsManager = new JdbcUserDetailsManager(dataSource);
+//        userDetailsManager.setUsersByUsernameQuery(userByUsernameQuery);
+//        userDetailsManager.setAuthoritiesByUsernameQuery(authsByUserQuery);
+//        userDetailsManager.setCreateUserSql(createUserQuery);
+//        return userDetailsManager;
+//    }
+//
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+////        HashMap<String, PasswordEncoder> encoders = new HashMap<>();
+////
+////        encoders.put("noop", NoOpPasswordEncoder.getInstance());
+////        encoders.put("bcrypt", new BCryptPasswordEncoder());
+////        encoders.put("scrypt", new SCryptPasswordEncoder(1000, 4, 1, 32, 64));
+////
+////        return new DelegatingPasswordEncoder("bcrypt", encoders);
+//        DelegatingPasswordEncoder passwordEncoder = (DelegatingPasswordEncoder) PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//        passwordEncoder.setDefaultPasswordEncoderForMatches(new BCryptPasswordEncoder());
+//        return passwordEncoder;
+//    }
+//}

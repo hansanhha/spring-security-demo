@@ -7,3 +7,5 @@ INSERT INTO authority (authority_id, name, user_id) VALUES ('2', 'ADMIN', '2');
 INSERT INTO authority (authority_id, name, user_id) VALUES ('3', 'MANAGER', '3');
 
 INSERT INTO product (product_id, name, price, currency) VALUES ('1', 'Chocolate', '10', 'USD');
+
+-- INSERT INTO token (token_id, identifier, token) VALUES ('1', );
